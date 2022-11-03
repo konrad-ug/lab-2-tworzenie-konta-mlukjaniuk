@@ -1,36 +1,16 @@
-import re
-
-
 class Konto:
-    def __init__(self, imie, nazwisko, pesel, kod_rabatowy=None):
-        self.imie = imie
-        self.nazwisko = nazwisko
+    def __init__(self):
         self.saldo = 0
-        self.pesel = pesel
-        self.czyPeselJestPoprawny()
-        if kod_rabatowy is not None and self.czyKlientPo1960():
-            self.realizacjaKoduRabatowego(kod_rabatowy)
+        self.oplata_przelewu_ekspresowego = 0
 
-    def czyPeselJestPoprawny(self):
-        if len(self.pesel) != 11:
-            self.pesel = "Niepoprawny pesel!"
+    def wykonajPrzelewWychodzacy(self, kwota_przelewu):
+        if self.saldo >= kwota_przelewu > 0:
+            self.saldo = self.saldo - kwota_przelewu
 
-    def rokUrodzeniaKlienta(self):
-        cyfra_kontrolna = int(self.pesel[2])
-        if cyfra_kontrolna == 0 or cyfra_kontrolna == 1:
-            rok_urodzenia = 1900 + int(self.pesel[0:2])
-        else:
-            rok_urodzenia = 2000 + int(self.pesel[0:2])
-        return rok_urodzenia
+    def wykonajPrzelewPrzychodzacy(self, kwota_przelewu):
+        if kwota_przelewu > 0:
+            self.saldo = self.saldo + kwota_przelewu
 
-    def czyKlientPo1960(self):
-        if self.rokUrodzeniaKlienta() > 1960:
-            return True
-        else:
-            return False
-
-
-    def realizacjaKoduRabatowego(self, kod_rabatowy):
-        if re.match(r"^PROM_[a-zA-Z0-9][a-zA-Z0-9]\b", kod_rabatowy):
-            self.saldo = self.saldo + 50
-
+    def wykonajPrzelewWychodzacyEkspresowy(self, kwota_przelewu):
+        if self.saldo >= kwota_przelewu > 0:
+            self.saldo = self.saldo - kwota_przelewu - self.oplata_przelewu_ekspresowego
