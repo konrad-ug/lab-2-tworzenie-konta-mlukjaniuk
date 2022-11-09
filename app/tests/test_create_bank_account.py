@@ -265,3 +265,65 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoPrywatne(unittest.Tes
         konto.wykonajPrzelewWychodzacyEkspresowy(800)
         self.assertEqual(konto.saldo, -5)
 
+    # feature9
+class TestHistoriaPrzelewowKontoOsobiste(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
+
+    def test_utworzona_historia_przelewow(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        self.assertEqual(konto.historia_przelewow, [])
+
+    def test_dodanie_przelewu_przychodzacego(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.wykonajPrzelewPrzychodzacy(100)
+        self.assertEqual(konto.historia_przelewow, [100])
+
+    def test_dodanie_przelewu_wychodzacego(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.wykonajPrzelewWychodzacy(100)
+        self.assertEqual(konto.historia_przelewow, [-100])
+
+    def test_dodanie_przelewu_wychodzacego_ekspresowego(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.wykonajPrzelewWychodzacyEkspresowy(100)
+        self.assertEqual(konto.historia_przelewow, [-100, -1])
+
+    def test_dodanie_kilku_przelewow(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.wykonajPrzelewPrzychodzacy(500)
+        konto.wykonajPrzelewWychodzacy(200)
+        konto.wykonajPrzelewWychodzacyEkspresowy(100)
+        self.assertEqual(konto.historia_przelewow, [500, -200, -100, -1])
+
+
+class TestHistoriaPrzelewowKontoFirmowe(unittest.TestCase):
+    nazwa_firmy = "Firma"
+    nip = "1234567890"
+
+    def test_utworzona_historia_przelewow(self):
+        konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+        self.assertEqual(konto.historia_przelewow, [])
+
+    def test_dodanie_przelewu_przychodzacego(self):
+        konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+        konto.wykonajPrzelewPrzychodzacy(100)
+        self.assertEqual(konto.historia_przelewow, [100])
+
+    def test_dodanie_przelewu_wychodzacego(self):
+        konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+        konto.wykonajPrzelewWychodzacy(100)
+        self.assertEqual(konto.historia_przelewow, [-100])
+
+    def test_dodanie_przelewu_wychodzacego_ekspresowego(self):
+        konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+        konto.wykonajPrzelewWychodzacyEkspresowy(100)
+        self.assertEqual(konto.historia_przelewow, [-100, -5])
+
+    def test_dodanie_kilku_przelewow(self):
+        konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+        konto.wykonajPrzelewPrzychodzacy(500)
+        konto.wykonajPrzelewWychodzacy(200)
+        konto.wykonajPrzelewWychodzacyEkspresowy(100)
+        self.assertEqual(konto.historia_przelewow, [500, -200, -100, -5])

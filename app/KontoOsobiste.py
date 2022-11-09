@@ -19,6 +19,7 @@ class KontoOsobiste(Konto):
 
     def rokUrodzeniaKlienta(self):
         cyfra_rok = int(self.pesel[2])
+        rok_urodzenia = None
         if cyfra_rok == 0 or cyfra_rok == 1:
             rok_urodzenia = 1900 + int(self.pesel[0:2])
         elif cyfra_rok == 2 or cyfra_rok == 3:
