@@ -49,6 +49,22 @@ class TestCreateBankAccount(unittest.TestCase):
         konto = KontoOsobiste("Dariusz", "Januszewski", "59041678911", "PROM_12")
         self.assertEqual(konto.saldo, 0)
 
+    def test_wykorzystany_kod_po_2000(self):
+        konto = KontoOsobiste("Dariusz", "Januszewski", "62241678911", "PROM_12")
+        self.assertEqual(konto.saldo, 50)
+
+    def test_wykorzystany_kod_po_2100(self):
+        konto = KontoOsobiste("Dariusz", "Januszewski", "62441678911", "PROM_12")
+        self.assertEqual(konto.saldo, 50)
+
+    def test_wykorzystany_kod_po_2200(self):
+        konto = KontoOsobiste("Dariusz", "Januszewski", "62641678911", "PROM_12")
+        self.assertEqual(konto.saldo, 50)
+
+    def test_wykorzystany_kod_po_1800(self):
+        konto = KontoOsobiste("Dariusz", "Januszewski", "60841678911", "PROM_12")
+        self.assertEqual(konto.saldo, 0)
+
 
     # feature6
 class TestKsiegowaniePrzelewowWychodzacych(unittest.TestCase):
