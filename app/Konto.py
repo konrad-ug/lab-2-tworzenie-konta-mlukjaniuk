@@ -26,3 +26,17 @@ class Konto:
             self.saldo = self.saldo - kwota_przelewu - self.oplata_przelewu_ekspresowego
         self.dodajPrzelewEkspresowyDoHistorii(kwota_przelewu)
 
+    def zaciagnijKredyt(self, kwota_kredytu):
+        if kwota_kredytu <= 0:
+            return False
+        if len(self.historia_przelewow) < 3:
+            return False
+        if self.historia_przelewow[-3] > 0 and self.historia_przelewow[-2] > 0 and self.historia_przelewow[-1] > 0:
+            self.saldo = self.saldo + kwota_kredytu
+            return True
+        if len(self.historia_przelewow) < 5:
+            return False
+        if sum(self.historia_przelewow[-5:]) <= kwota_kredytu:
+            return False
+        self.saldo = self.saldo + kwota_kredytu
+        return True

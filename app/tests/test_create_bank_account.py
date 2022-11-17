@@ -327,3 +327,58 @@ class TestHistoriaPrzelewowKontoFirmowe(unittest.TestCase):
         konto.wykonajPrzelewWychodzacy(200)
         konto.wykonajPrzelewWychodzacyEkspresowy(100)
         self.assertEqual(konto.historia_przelewow, [500, -200, -100, -5])
+
+    # feature12
+class TestZaciaganieKredytu(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
+
+    def test_udzielony_kredyt_3_wplaty(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [-100, 100, 100, 100]
+        czy_przyznany = konto.zaciagnijKredyt(500)
+        self.assertTrue(czy_przyznany)
+        self.assertEqual(konto.saldo, 500)
+
+    def test_nieudzielony_kredyt_wyplaty_w_3_ostatnich_transakcjach(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [100, -100, 100]
+        czy_przyznany = konto.zaciagnijKredyt(500)
+        self.assertFalse(czy_przyznany)
+        self.assertEqual(konto.saldo, 0)
+
+    def test_nieudzielony_kredyt_ujemna_kwota(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [100, 100, 100]
+        czy_przyznany = konto.zaciagnijKredyt(-100)
+        self.assertFalse(czy_przyznany)
+        self.assertEqual(konto.saldo, 0)
+
+    def test_nieudzielony_kredyt_2_wplaty_w_historii(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [100, 100]
+        czy_przyznany = konto.zaciagnijKredyt(100)
+        self.assertFalse(czy_przyznany)
+        self.assertEqual(konto.saldo, 0)
+
+    def test_nieudzielony_kredyt_pusta_historia(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = []
+        czy_przyznany = konto.zaciagnijKredyt(100)
+        self.assertFalse(czy_przyznany)
+        self.assertEqual(konto.saldo, 0)
+
+    def test_udzielony_kredyt_5_wplat(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [-300, 200, 100, -50, 300]
+        czy_przyznany = konto.zaciagnijKredyt(200)
+        self.assertTrue(czy_przyznany)
+        self.assertEqual(konto.saldo, 200)
+
+    def test_nieudzielony_kredyt_5_wplat_o_mniejszej_wartosci(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        konto.historia_przelewow = [-500, 100, -300, 200, 100]
+        czy_przyznany = konto.zaciagnijKredyt(200)
+        self.assertFalse(czy_przyznany)
+        self.assertEqual(konto.saldo, 0)
