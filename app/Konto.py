@@ -26,26 +26,5 @@ class Konto:
             self.saldo = self.saldo - kwota_przelewu - self.oplata_przelewu_ekspresowego
         self.dodajPrzelewEkspresowyDoHistorii(kwota_przelewu)
 
-    def sprawdzTrzyOstatnieTransakcje(self):
-        if len(self.historia_przelewow) < 3:
-            return False
-        if self.historia_przelewow[-3] > 0 and self.historia_przelewow[-2] > 0 and self.historia_przelewow[-1] > 0:
-            return True
-        return False
-
-    def sprawdzPiecOstatnichTransakcji(self, kwota_kredytu):
-        if len(self.historia_przelewow) < 5:
-            return False
-        if sum(self.historia_przelewow[-5:]) <= kwota_kredytu:
-            return False
-        return True
-
-    def zaciagnijKredyt(self, kwota_kredytu):
-        if kwota_kredytu <= 0:
-            return False
-        if self.sprawdzTrzyOstatnieTransakcje() or self.sprawdzPiecOstatnichTransakcji(kwota_kredytu):
-            self.saldo = self.saldo + kwota_kredytu
-            return True
-        return False
 
 

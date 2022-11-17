@@ -337,7 +337,7 @@ class TestHistoriaPrzelewowKontoFirmowe(unittest.TestCase):
     # feature12
 
 
-class TestZaciaganieKredytu(unittest.TestCase):
+class TestZaciaganieKredytuKontoOsobiste(unittest.TestCase):
     imie = "Dariusz"
     nazwisko = "Januszewski"
     pesel = "62041678911"
@@ -360,3 +360,31 @@ class TestZaciaganieKredytu(unittest.TestCase):
         czy_przyznany = self.konto.zaciagnijKredyt(kwota_kredytu)
         self.assertEqual(czy_przyznany, oczekiwany_wynik_wniosku)
         self.assertEqual(self.konto.saldo, oczekiwane_saldo)
+
+
+class TestZaciaganieKredytuKontoFirmowe(unittest.TestCase):
+    nazwa_firmy = "Firma"
+    nip = "1234567890"
+
+    def setUp(self):
+        self.konto = KontoFirmowe(self.nazwa_firmy, self.nip)
+
+    @parameterized.expand([
+        ([-1775, 2000, 2000, 2000], 2000, True, 6225),
+        ([2000, -2000, 2000], 2000, False, 2000),
+        ([2000, 2000, 2000], -2000, False, 6000),
+        ([5000, 5000, -1775, 2000, -1775, 2000], 2000, True, 12450),
+        ([], 2000, False, 0),
+        ([-5000, 1000, -3000, 2000, 1000], 2000, False, -4000),
+        ([-1775, 3000], 2000, False, 1225),
+        ([2000, 2000, 2000, 2000], 2000, False, 8000),
+        ([10000, -1775, 2000, 2000, 2000], 2000, True, 16225)
+    ])
+    def test_zaciaganie_kredytu(self, historia_przelewow, kwota_kredytu, oczekiwany_wynik_wniosku,
+                                oczekiwane_saldo):
+        self.konto.saldo = sum(historia_przelewow)
+        self.konto.historia_przelewow = historia_przelewow
+        czy_przyznany = self.konto.zaciagnijKredyt(kwota_kredytu)
+        self.assertEqual(czy_przyznany, oczekiwany_wynik_wniosku)
+        self.assertEqual(self.konto.saldo, oczekiwane_saldo)
+
