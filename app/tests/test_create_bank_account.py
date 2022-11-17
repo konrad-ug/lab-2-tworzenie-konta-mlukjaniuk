@@ -1,4 +1,5 @@
 import unittest
+from parameterized import parameterized, parameterized_class
 
 from ..KontoOsobiste import KontoOsobiste
 from ..KontoFirmowe import KontoFirmowe
@@ -65,8 +66,9 @@ class TestCreateBankAccount(unittest.TestCase):
         konto = KontoOsobiste("Dariusz", "Januszewski", "60841678911", "PROM_12")
         self.assertEqual(konto.saldo, 0)
 
-
     # feature6
+
+
 class TestKsiegowaniePrzelewowWychodzacych(unittest.TestCase):
     imie = "Dariusz"
     nazwisko = "Januszewski"
@@ -76,7 +78,7 @@ class TestKsiegowaniePrzelewowWychodzacych(unittest.TestCase):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
         konto.saldo = 1000
         konto.wykonajPrzelewWychodzacy(800)
-        self.assertEqual(konto.saldo, 1000-800)
+        self.assertEqual(konto.saldo, 1000 - 800)
 
     def test_nieudany_przelew_wychodzacy_za_male_saldo(self):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
@@ -106,13 +108,13 @@ class TestKsiegowaniePrzelewowPrzychodzacych(unittest.TestCase):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
         konto.saldo = 1000
         konto.wykonajPrzelewPrzychodzacy(800)
-        self.assertEqual(konto.saldo, 1000+800)
+        self.assertEqual(konto.saldo, 1000 + 800)
 
     def test_udany_przelew_przychodzacy_debet(self):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
         konto.saldo = -1
         konto.wykonajPrzelewPrzychodzacy(800)
-        self.assertEqual(konto.saldo, -1+800)
+        self.assertEqual(konto.saldo, -1 + 800)
 
     def test_nieudany_przelew_przychodzacy_zla_kwota(self):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
@@ -120,8 +122,9 @@ class TestKsiegowaniePrzelewowPrzychodzacych(unittest.TestCase):
         konto.wykonajPrzelewPrzychodzacy(-800)
         self.assertEqual(konto.saldo, 1000)
 
-
     # feature7
+
+
 class TestTworzenieKontaFirmowego(unittest.TestCase):
     nazwa_firmy = "Firma"
 
@@ -150,7 +153,7 @@ class TestKsiegowaniePrzelewowWychodzacychKontoFirmowe(unittest.TestCase):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
         konto.saldo = 1000
         konto.wykonajPrzelewWychodzacy(800)
-        self.assertEqual(konto.saldo, 1000-800)
+        self.assertEqual(konto.saldo, 1000 - 800)
 
     def test_nieudany_przelew_wychodzacy_za_male_saldo(self):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
@@ -179,13 +182,13 @@ class TestKsiegowaniePrzelewowPrzychodzacychKontoFirmowe(unittest.TestCase):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
         konto.saldo = 1000
         konto.wykonajPrzelewPrzychodzacy(800)
-        self.assertEqual(konto.saldo, 1000+800)
+        self.assertEqual(konto.saldo, 1000 + 800)
 
     def test_udany_przelew_przychodzacy_debet(self):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
         konto.saldo = -5
         konto.wykonajPrzelewPrzychodzacy(800)
-        self.assertEqual(konto.saldo, -5+800)
+        self.assertEqual(konto.saldo, -5 + 800)
 
     def test_nieudany_przelew_przychodzacy_zla_kwota(self):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
@@ -193,8 +196,9 @@ class TestKsiegowaniePrzelewowPrzychodzacychKontoFirmowe(unittest.TestCase):
         konto.wykonajPrzelewPrzychodzacy(-800)
         self.assertEqual(konto.saldo, 1000)
 
-
     # feature8
+
+
 class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoFirmowe(unittest.TestCase):
     nazwa_firmy = "Firma"
     nip = "1234567890"
@@ -203,7 +207,7 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoFirmowe(unittest.Test
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
         konto.saldo = 1000
         konto.wykonajPrzelewWychodzacyEkspresowy(800)
-        self.assertEqual(konto.saldo, 1000-800-5)
+        self.assertEqual(konto.saldo, 1000 - 800 - 5)
 
     def test_nieudany_przelew_wychodzacy_zla_kwota(self):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
@@ -215,7 +219,7 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoFirmowe(unittest.Test
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
         konto.saldo = 100
         konto.wykonajPrzelewWychodzacyEkspresowy(100)
-        self.assertEqual(konto.saldo, 100-100-5)
+        self.assertEqual(konto.saldo, 100 - 100 - 5)
 
     def test_nieudany_przelew_ekspresowy_zbyt_duza_kwota(self):
         konto = KontoFirmowe(self.nazwa_firmy, self.nip)
@@ -239,7 +243,7 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoPrywatne(unittest.Tes
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
         konto.saldo = 1000
         konto.wykonajPrzelewWychodzacyEkspresowy(800)
-        self.assertEqual(konto.saldo, 1000-800-1)
+        self.assertEqual(konto.saldo, 1000 - 800 - 1)
 
     def test_nieudany_przelew_wychodzacy_zla_kwota(self):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
@@ -251,7 +255,7 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoPrywatne(unittest.Tes
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
         konto.saldo = 100
         konto.wykonajPrzelewWychodzacyEkspresowy(100)
-        self.assertEqual(konto.saldo, 100-100-1)
+        self.assertEqual(konto.saldo, 100 - 100 - 1)
 
     def test_nieudany_przelew_ekspresowy_zbyt_duza_kwota(self):
         konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
@@ -266,6 +270,8 @@ class TestKsiegowaniePrzelewowWychodzacychEkspresowychKontoPrywatne(unittest.Tes
         self.assertEqual(konto.saldo, -5)
 
     # feature9
+
+
 class TestHistoriaPrzelewowKontoOsobiste(unittest.TestCase):
     imie = "Dariusz"
     nazwisko = "Januszewski"
@@ -327,3 +333,30 @@ class TestHistoriaPrzelewowKontoFirmowe(unittest.TestCase):
         konto.wykonajPrzelewWychodzacy(200)
         konto.wykonajPrzelewWychodzacyEkspresowy(100)
         self.assertEqual(konto.historia_przelewow, [500, -200, -100, -5])
+
+    # feature12
+
+
+class TestZaciaganieKredytu(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
+
+    def setUp(self):
+        self.konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+
+    @parameterized.expand([
+        ([-100, 100, 100, 100], 500, True, 500),
+        ([100, -100, 100], 500, False, 0),
+        ([100, 100, 100], -100, False, 0),
+        ([100, 100], 100, False, 0),
+        ([], 100, False, 0),
+        ([-300, 200, 100, -50, 300], 200, True, 200),
+        ([-500, 100, -300, 200, 100], 200, False, 0)
+    ])
+    def test_zaciaganie_kredytu(self, historia_przelewow, kwota_kredytu, oczekiwany_wynik_wniosku,
+                                oczekiwane_saldo):
+        self.konto.historia_przelewow = historia_przelewow
+        czy_przyznany = self.konto.zaciagnijKredyt(kwota_kredytu)
+        self.assertEqual(czy_przyznany, oczekiwany_wynik_wniosku)
+        self.assertEqual(self.konto.saldo, oczekiwane_saldo)
