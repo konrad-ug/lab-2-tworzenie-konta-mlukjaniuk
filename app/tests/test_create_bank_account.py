@@ -419,3 +419,7 @@ class TestRejestrKontOsobistych(unittest.TestCase):
     def test_4_wyszukiwanie_konta_po_peselu(self):
         pesel = "62041678911"
         self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), RejestrKontOsobistych.lista_kont[0])
+
+    def test_5_nieudane_wyszukiwanie_konta_po_peselu(self):
+        pesel = "12345678911"
+        self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), None)
