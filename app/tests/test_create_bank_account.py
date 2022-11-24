@@ -1,8 +1,9 @@
 import unittest
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 
 from ..KontoOsobiste import KontoOsobiste
 from ..KontoFirmowe import KontoFirmowe
+from ..RejestrKontOsobistych import RejestrKontOsobistych
 
 
 class TestCreateBankAccount(unittest.TestCase):
@@ -388,3 +389,44 @@ class TestZaciaganieKredytuKontoFirmowe(unittest.TestCase):
         self.assertEqual(czy_przyznany, oczekiwany_wynik_wniosku)
         self.assertEqual(self.konto.saldo, oczekiwane_saldo)
 
+    # feature14
+class TestRejestrKontOsobistych(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.konto = KontoOsobiste(cls.imie, cls.nazwisko, cls.pesel)
+
+    def test_1_dodawanie_pierwszego_konta(cls):
+        RejestrKontOsobistych.dodajKonto(cls.konto)
+        cls.assertEqual(RejestrKontOsobistych.lista_kont, [cls.konto])
+
+    def test_2_dodawanie_drugiego_konta(self):
+        imie = "Jan"
+        nazwisko = "Kowalski"
+        pesel = "63048178911"
+        konto = KontoOsobiste(imie, nazwisko, pesel)
+        RejestrKontOsobistych.dodajKonto(konto)
+        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 2)
+
+    def test_3_dodawanie_trzeciego_konta(self):
+        imie = "Anna"
+        nazwisko = "Nowak"
+        pesel = "64041678911"
+        konto = KontoOsobiste(imie, nazwisko, pesel)
+        RejestrKontOsobistych.dodajKonto(konto)
+        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 3)
+
+    def test_4_wyszukiwanie_konta_po_peselu(self):
+        pesel = "62041678911"
+        self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), RejestrKontOsobistych.lista_kont[0])
+
+    def test_5_nieudane_wyszukiwanie_konta_po_peselu(self):
+        pesel = "12345678911"
+        self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), None)
+
+    @classmethod
+    def tearDownClass(cls):
+        RejestrKontOsobistych.lista_kont = []
