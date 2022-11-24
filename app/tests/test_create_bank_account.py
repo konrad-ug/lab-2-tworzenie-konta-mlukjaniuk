@@ -3,6 +3,7 @@ from parameterized import parameterized, parameterized_class
 
 from ..KontoOsobiste import KontoOsobiste
 from ..KontoFirmowe import KontoFirmowe
+from ..RejestrKontOsobistych import RejestrKontOsobistych
 
 
 class TestCreateBankAccount(unittest.TestCase):
@@ -388,3 +389,23 @@ class TestZaciaganieKredytuKontoFirmowe(unittest.TestCase):
         self.assertEqual(czy_przyznany, oczekiwany_wynik_wniosku)
         self.assertEqual(self.konto.saldo, oczekiwane_saldo)
 
+    # feature14
+class TestRejestrKontOsobistych(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
+
+    def test_1_dodawanie_pierwszego_konta(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        RejestrKontOsobistych.dodajKonto(konto)
+        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 1)
+
+    def test_2_dodawanie_drugiego_konta(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        RejestrKontOsobistych.dodajKonto(konto)
+        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 2)
+
+    def test_3_dodawanie_trzech_kont(self):
+        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        RejestrKontOsobistych.dodajKonto(konto)
+        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 3)
