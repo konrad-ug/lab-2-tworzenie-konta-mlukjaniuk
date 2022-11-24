@@ -391,14 +391,17 @@ class TestZaciaganieKredytuKontoFirmowe(unittest.TestCase):
 
     # feature14
 class TestRejestrKontOsobistych(unittest.TestCase):
+    imie = "Dariusz"
+    nazwisko = "Januszewski"
+    pesel = "62041678911"
 
-    def test_1_dodawanie_pierwszego_konta(self):
-        imie = "Dariusz"
-        nazwisko = "Januszewski"
-        pesel = "62041678911"
-        konto = KontoOsobiste(imie, nazwisko, pesel)
-        RejestrKontOsobistych.dodajKonto(konto)
-        self.assertEqual(RejestrKontOsobistych.lista_kont, [konto])
+    @classmethod
+    def setUpClass(cls):
+        cls.konto = KontoOsobiste(cls.imie, cls.nazwisko, cls.pesel)
+
+    def test_1_dodawanie_pierwszego_konta(cls):
+        RejestrKontOsobistych.dodajKonto(cls.konto)
+        cls.assertEqual(RejestrKontOsobistych.lista_kont, [cls.konto])
 
     def test_2_dodawanie_drugiego_konta(self):
         imie = "Jan"
@@ -423,3 +426,7 @@ class TestRejestrKontOsobistych(unittest.TestCase):
     def test_5_nieudane_wyszukiwanie_konta_po_peselu(self):
         pesel = "12345678911"
         self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), None)
+
+    @classmethod
+    def tearDownClass(cls):
+        RejestrKontOsobistych.lista_kont = []
