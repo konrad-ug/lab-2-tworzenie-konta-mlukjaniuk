@@ -1,5 +1,5 @@
 import unittest
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 
 from ..KontoOsobiste import KontoOsobiste
 from ..KontoFirmowe import KontoFirmowe
@@ -391,21 +391,31 @@ class TestZaciaganieKredytuKontoFirmowe(unittest.TestCase):
 
     # feature14
 class TestRejestrKontOsobistych(unittest.TestCase):
-    imie = "Dariusz"
-    nazwisko = "Januszewski"
-    pesel = "62041678911"
 
     def test_1_dodawanie_pierwszego_konta(self):
-        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        imie = "Dariusz"
+        nazwisko = "Januszewski"
+        pesel = "62041678911"
+        konto = KontoOsobiste(imie, nazwisko, pesel)
         RejestrKontOsobistych.dodajKonto(konto)
-        self.assertEqual(RejestrKontOsobistych.liczbaKont(), 1)
+        self.assertEqual(RejestrKontOsobistych.lista_kont, [konto])
 
     def test_2_dodawanie_drugiego_konta(self):
-        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+        imie = "Jan"
+        nazwisko = "Kowalski"
+        pesel = "63048178911"
+        konto = KontoOsobiste(imie, nazwisko, pesel)
         RejestrKontOsobistych.dodajKonto(konto)
         self.assertEqual(RejestrKontOsobistych.liczbaKont(), 2)
 
-    def test_3_dodawanie_trzech_kont(self):
-        konto = KontoOsobiste(self.imie, self.nazwisko, self.pesel)
+    def test_3_dodawanie_trzeciego_konta(self):
+        imie = "Anna"
+        nazwisko = "Nowak"
+        pesel = "64041678911"
+        konto = KontoOsobiste(imie, nazwisko, pesel)
         RejestrKontOsobistych.dodajKonto(konto)
         self.assertEqual(RejestrKontOsobistych.liczbaKont(), 3)
+
+    def test_4_wyszukiwanie_konta_po_peselu(self):
+        pesel = "62041678911"
+        self.assertEqual(RejestrKontOsobistych.wyszukajKontoPoPeselu(pesel), RejestrKontOsobistych.lista_kont[0])
