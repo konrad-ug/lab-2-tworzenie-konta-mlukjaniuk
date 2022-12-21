@@ -8,9 +8,12 @@ app = Flask(__name__)
 def stworz_konto_osobiste():
     dane = request.get_json()
     print(f"Request o stworzenie konta z danymi: {dane}")
-    konto = KontoOsobiste(dane["imie"], dane["nazwisko"], dane["pesel"])
-    RejestrKontOsobistych.dodajKonto(konto)
-    return jsonify("Konto stworzone"), 201
+    if RejestrKontOsobistych.wyszukajKontoPoPeselu(dane["pesel"]) is not None:
+        return "Konto o podanym numerze pesel już istnieje", 400
+    else:
+        konto = KontoOsobiste(dane["imie"], dane["nazwisko"], dane["pesel"])
+        RejestrKontOsobistych.dodajKonto(konto)
+        return jsonify("Konto stworzone"), 201
 
 
 @app.route("/konta/ile_kont", methods=['GET'])
@@ -49,13 +52,5 @@ def aktualizuj_dane_konta(pesel):
     if konto is None:
         return jsonify("Nie znaleziono konta"), 404
     else:
-        if dane.get("imie") is not None:
-            konto.imie = dane["imie"]
-        if dane.get("nazwisko") is not None:
-            konto.nazwisko = dane["nazwisko"]
-        if dane.get("pesel") is not None:
-            konto.pesel = dane["pesel"]
-        if dane.get("saldo") is not None:
-            konto.saldo = dane["saldo"]
-        return jsonify(f"Dane konta zaktualizowane: Imię: {konto.imie}, Nazwisko: {konto.nazwisko}, Pesel:"
-                       f" {konto.pesel}, Saldo: {konto.saldo}"), 200
+        RejestrKontOsobistych.aktualizujDaneKonta(pesel, dane)
+        return jsonify("Dane konta zaktualizowane"), 202
