@@ -40,5 +40,5 @@ jobs:
         python -m coverage run -m unittest
     - name: Show code coverage
       run: |
-        python -m coverage report --fail-under=100 --omit="KontoFirmowe.py"
+        python -m coverage report --fail-under=100 --omit="app/KontoFirmowe.py"
         
