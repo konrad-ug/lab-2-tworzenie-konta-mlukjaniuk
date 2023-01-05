@@ -1,3 +1,6 @@
+# from SMTPConnection import SMTPConnection
+
+
 class Konto:
     def __init__(self):
         self.saldo = 0
@@ -26,5 +29,7 @@ class Konto:
             self.saldo = self.saldo - kwota_przelewu - self.oplata_przelewu_ekspresowego
         self.dodajPrzelewEkspresowyDoHistorii(kwota_przelewu)
 
+    def wyslijHistorieNaMaila(self, adresat, SMTPConnection):
+        pass
 
 

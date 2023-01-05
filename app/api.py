@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
-from app.RejestrKontOsobistych import RejestrKontOsobistych
+from flask import Flask, jsonify, request
+
 from app.KontoOsobiste import KontoOsobiste
+from app.RejestrKontOsobistych import RejestrKontOsobistych
+
 app = Flask(__name__)
 
 
